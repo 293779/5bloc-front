@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import { RailRoad_Ticket_ABI, RailRoad_Ticket_ADDRESS, RailRoad_Card_ABI, RailRoad_Card_ADDRESS } from '../config'
 
 function Admin() {
-
+  //définition des variables (getter, setter)
   const [isAdmin, setIsAdmin] = useState();
 
   //a la fin du chargement de la page on appelle la méthode getData()
@@ -17,13 +17,13 @@ function Admin() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
     //récupération des contrats
-    const RailRoadTicket = new ethers.Contract(RailRoad_Ticket_ADDRESS, RailRoad_Ticket_ABI, provider);
+    //const RailRoadTicket = new ethers.Contract(RailRoad_Ticket_ADDRESS, RailRoad_Ticket_ABI, provider);
     const RailRoadCard = new ethers.Contract(RailRoad_Card_ADDRESS, RailRoad_Card_ABI, provider);
     //récupération de l'utilisateur
     const signer = await provider.getSigner();
     //récupération de l'adresse de l'utilisateur
     const signerAddress = await signer.getAddress();
-    //récupération du nombre de tickets de l'utilisateur, du prix du tickets et de la réduction qui sera aplliqué
+    //récupération du booléen qui définit si vous êtes admin
     const admin = await RailRoadCard.admins(signerAddress);
 
     //sauvegarde des valeurs dans les variables
@@ -41,10 +41,13 @@ function Admin() {
     const RailRoadCard = new ethers.Contract(RailRoad_Card_ADDRESS, RailRoad_Card_ABI, signer);
 
     try {
+      //appelle de la méthode pour ajouter une carte, à partir des valeurs du form
       const transaction = await RailRoadCard.addDiscountCard(data.get("cardName"), data.get("cardDiscountPercent"), data.get("cardPrice"), data.get("cardDescription"), data.get("cardUrl"));
 
+      //quand la transaction est terminé on réappelle la méthode getData()
       await transaction.wait();
       getData();
+      //on avertie l'utilisateur de la création
       alert("la carte a bien était créer");
     }
     catch (err) {

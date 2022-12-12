@@ -26,12 +26,15 @@ function MyCard() {
     const signer = await provider.getSigner();
     //récupération de l'adresse de l'utilisateur
     const signerAddress = await signer.getAddress();
-    //récupération du nombre de tickets de l'utilisateur, du prix du tickets et de la réduction qui sera aplliqué
+    //récupération de la liste des Id des cartes de l'utilisateur et du meilleur pourcentage de réduction
     const listUserCardsId = await RailRoadCard.listUserCards(signerAddress);
     const DiscountPercent = await RailRoadCard.getBiggestReduct(signerAddress);
     
+    //on parcours la liste des Id
     for (const i of listUserCardsId) {
+      //on récupère le détail de la carte en fonction de i
       const card_Detail = await RailRoadCard.discountCards(i)
+      //on enregistre le résultat
       setListUserCardsDetail((item) => [
         ...item,
         {
@@ -57,6 +60,7 @@ function MyCard() {
     window.location.reload()
   }
 
+  //CardExchange permet le transfert de Carte
   async function CardExchange(e) {
     //récupération des valeurs données dans la balise <Form>
     e.preventDefault();
@@ -76,11 +80,13 @@ function MyCard() {
       refreshPage();
     }
     catch (err) {
-      console.log(err)
+      console.log(err);
+      alert(err);
     }
 
   }
 
+  //CardSell permet la vente de Carte
   async function CardSell(e) {
     //récupération des valeurs données dans la balise <Form>
     e.preventDefault();
@@ -100,7 +106,8 @@ function MyCard() {
       refreshPage();
     }
     catch (err) {
-      console.log(err)
+      console.log(err);
+      alert(err);
     }
 
   }

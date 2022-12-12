@@ -51,17 +51,19 @@ function App() {
     const RailRoadTicket = new ethers.Contract(RailRoad_Ticket_ADDRESS, RailRoad_Ticket_ABI, signer);
 
     try {
+      //utilisation de la méthode de calcul du prix total
       const finalPrice = await RailRoadTicket.calculate_ticket_price(data.get("nbrOfTicketToBuy"));
 
       //appelle de la méthode du contrat qui permet l'achat de tickets
       const transaction = await RailRoadTicket.ticket_buy(data.get("nbrOfTicketToBuy"), { value: finalPrice });
 
-      //quand la transaction est terminé on réappelle la méthode getDat()
+      //quand la transaction est terminé on réappelle la méthode getData()
       await transaction.wait();
       getData();
     }
     catch (err) {
-      console.log(err)
+      console.log(err);
+      alert(err);
     }
 
   }

@@ -25,11 +25,14 @@ function MarketCard() {
     const signer = await provider.getSigner();
     //récupération de l'adresse de l'utilisateur
     const signerAddress = await signer.getAddress();
-    //récupération du nombre de tickets de l'utilisateur, du prix du tickets et de la réduction qui sera aplliqué
+    //récupération de la liste des Id des cartes disponible a l'achat
     const listAvailableCardsId = await RailRoadCard.listAvailableCards();
     
+    //on parcours la liste des Id
     for (const i of listAvailableCardsId) {
+      //on récupère le détail de la carte en fonction de i
       const card_Detail = await RailRoadCard.discountCards(i)
+      //on enregistre le résultat
       setListAvailableCardsDetail((item) => [
         ...item,
         {
@@ -55,7 +58,7 @@ function MarketCard() {
     window.location.reload()
   }
 
-  //
+  //CardBuy permet l'achat de Carte
   async function CardBuy(e) {
     //récupération des valeurs données dans la balise <Form>
     e.preventDefault();
@@ -67,6 +70,7 @@ function MarketCard() {
     const RailRoadCard = new ethers.Contract(RailRoad_Card_ADDRESS, RailRoad_Card_ABI, signer);
 
     try {
+      //appelle de la méthode discountCards pour récupérer le prix dans les informations de la carte
       const card_Detail = await RailRoadCard.discountCards(data.get("CardId"));
 
       //appelle de la méthode du contrat qui permet l'achat de tickets
@@ -77,8 +81,8 @@ function MarketCard() {
       refreshPage();
     }
     catch (err) {
-      console.log(err)
-      alert(err)
+      console.log(err);
+      alert(err);
     }
 
   }
