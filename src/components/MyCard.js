@@ -67,7 +67,7 @@ function MyCard() {
               <p>Votre adresse : {address}</p>
               <p>pourcentage de réduction appliqué (meilleur) : {bestDiscountPercent} %</p>              
 
-              {listUserCardsDetail.map((item, idx) => (
+              {listUserCardsDetail.map((item) => (
               <div key={item.id} className="alert-info mt-5 rounded-xl py-2 px-4">
                 <div>
                   <p>Id : {item.id}</p>

@@ -67,12 +67,14 @@ function MarketCard() {
     const RailRoadCard = new ethers.Contract(RailRoad_Card_ADDRESS, RailRoad_Card_ABI, signer);
 
     try {
-      const finalPrice = await RailRoadCard.calculate_ticket_price(data.get("nbrOfTicketToBuy"));
+      const card_Detail = await RailRoadCard.discountCards(data.get("CardId"));
+      console.log(card_Detail)
+      //const cardPrice = card_Detail.price;
 
       //appelle de la méthode du contrat qui permet l'achat de tickets
-      const transaction = await RailRoadCard.ticket_buy(data.get("nbrOfTicketToBuy"), { value: finalPrice });
+      const transaction = await RailRoadCard.buyDiscountCard(data.get("CardId"), { value: card_Detail.price });
 
-      //quand la transaction est terminé on réappelle la méthode getDat()
+      //quand la transaction est terminé on appelle la méthode refreshPage()
       await transaction.wait();
       refreshPage();
     }
@@ -93,7 +95,7 @@ function MarketCard() {
                 Voulez vous acheter une carte :
                 <div className="my-3">
                   <input
-                    type="number"
+                    type="text"
                     name="CardId"
                     className="input input-bordered block w-full focus:ring focus:outline-none"
                     placeholder="Id de la carte"
@@ -109,7 +111,7 @@ function MarketCard() {
                 </footer>
               </form>
 
-              {listAvailableCardsDetail.map((item, idx) => (
+              {listAvailableCardsDetail.map((item) => (
               <div key={item.id} className="alert-info mt-5 rounded-xl py-2 px-4">
                 <div>
                   <p>Id : {item.id}</p>
