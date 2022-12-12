@@ -68,8 +68,6 @@ function MarketCard() {
 
     try {
       const card_Detail = await RailRoadCard.discountCards(data.get("CardId"));
-      console.log(card_Detail)
-      //const cardPrice = card_Detail.price;
 
       //appelle de la méthode du contrat qui permet l'achat de tickets
       const transaction = await RailRoadCard.buyDiscountCard(data.get("CardId"), { value: card_Detail.price });
@@ -80,6 +78,7 @@ function MarketCard() {
     }
     catch (err) {
       console.log(err)
+      alert(err)
     }
 
   }
@@ -91,7 +90,7 @@ function MarketCard() {
         <div className="row">
           <main role="main" className="col-lg-12 d-flex justify-content-center">
             <div id="content">
-            <form onSubmit={CardBuy}>
+              <form onSubmit={CardBuy}>
                 Voulez vous acheter une carte :
                 <div className="my-3">
                   <input

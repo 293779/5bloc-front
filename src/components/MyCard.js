@@ -57,6 +57,54 @@ function MyCard() {
     window.location.reload()
   }
 
+  async function CardExchange(e) {
+    //récupération des valeurs données dans la balise <Form>
+    e.preventDefault();
+    const data = new FormData(e.target);
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    const signer = await provider.getSigner();
+    const RailRoadCard = new ethers.Contract(RailRoad_Card_ADDRESS, RailRoad_Card_ABI, signer);
+
+    try {
+      //appelle de la méthode du contrat qui permet le transfert de tickets
+      const transaction = await RailRoadCard.transferDiscountCard(data.get("CardId"), data.get("toAddress"));
+
+      //quand la transaction est terminé on appelle la méthode refreshPage()
+      await transaction.wait();
+      refreshPage();
+    }
+    catch (err) {
+      console.log(err)
+    }
+
+  }
+
+  async function CardSell(e) {
+    //récupération des valeurs données dans la balise <Form>
+    e.preventDefault();
+    const data = new FormData(e.target);
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    const signer = await provider.getSigner();
+    const RailRoadCard = new ethers.Contract(RailRoad_Card_ADDRESS, RailRoad_Card_ABI, signer);
+
+    try {
+      //appelle de la méthode du contrat qui permet la mise en vente de tickets
+      const transaction = await RailRoadCard.putCardToSell(data.get("CardId"), data.get("cardPrice"));
+
+      //quand la transaction est terminé on appelle la méthode refreshPage()
+      await transaction.wait();
+      refreshPage();
+    }
+    catch (err) {
+      console.log(err)
+    }
+
+  }
+
   //rendu HTML
   return (
     <div>
@@ -65,7 +113,63 @@ function MyCard() {
           <main role="main" className="col-lg-12 d-flex justify-content-center">
             <div id="content">
               <p>Votre adresse : {address}</p>
-              <p>pourcentage de réduction appliqué (meilleur) : {bestDiscountPercent} %</p>              
+              <p>pourcentage de réduction appliqué (meilleur) : {bestDiscountPercent} %</p>
+
+              <form onSubmit={CardExchange}>
+                Voulez vous transférer une carte :
+                <div className="my-3">
+                  <input
+                    type="text"
+                    name="CardId"
+                    className="input input-bordered block w-full focus:ring focus:outline-none"
+                    placeholder="Id de la carte"
+                  />
+                </div>
+                <div className="my-3">
+                  <input
+                    type="text"
+                    name="toAddress"
+                    className="input input-bordered block w-full focus:ring focus:outline-none"
+                    placeholder="adresse de destination"
+                  />
+                </div>
+                <footer className="p-4">
+                  <button
+                    type="submit"
+                    className="btn btn-primary submit-button focus:ring focus:outline-none w-full"
+                  >
+                    transférer carte
+                  </button>
+                </footer>
+              </form>
+
+              <form onSubmit={CardSell}>
+                Voulez vous vendre une carte :
+                <div className="my-3">
+                  <input
+                    type="text"
+                    name="CardId"
+                    className="input input-bordered block w-full focus:ring focus:outline-none"
+                    placeholder="Id de la carte"
+                  />
+                </div>
+                <div className="my-3">
+                  <input
+                    type="number"
+                    name="cardPrice"
+                    className="input input-bordered block w-full focus:ring focus:outline-none"
+                    placeholder="prix de vente"
+                  />
+                </div>
+                <footer className="p-4">
+                  <button
+                    type="submit"
+                    className="btn btn-primary submit-button focus:ring focus:outline-none w-full"
+                  >
+                    vendre carte
+                  </button>
+                </footer>
+              </form>
 
               {listUserCardsDetail.map((item) => (
               <div key={item.id} className="alert-info mt-5 rounded-xl py-2 px-4">
