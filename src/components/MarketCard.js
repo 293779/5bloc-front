@@ -115,17 +115,21 @@ function MarketCard() {
               </form>
 
               {listAvailableCardsDetail.map((item) => (
-              <div key={item.id} className="alert-info mt-5 rounded-xl py-2 px-4">
                 <div>
-                  <p>Id : {item.id}</p>
-                  <p>nom : {item.name}</p>
-                  <p>pourcentage de réduction : {item.discountPercent}</p>
-                  <p>disponible a la vente : {item.available}</p>
-                  <p>propriétaire : {item.owner}</p>
-                  <p>prix : {item.price}</p>
-                  <img src={item.image_url} width={250} height={250} alt="new"/>
+                  {item.id != 1 &&
+                  //on n'affiche pas la carte qui a pour Id 1, c'est une carte "fictive" qui n'est pas censé être utilisé
+                    <div key={item.id} className="alert-info mt-5 rounded-xl py-2 px-4">
+                        <div>
+                          <p>Id : {item.id}</p>
+                          <p>nom : {item.name}</p>
+                          <p>pourcentage de réduction : {item.discountPercent}</p>
+                          <p>propriétaire : {item.owner}</p>
+                          <p>prix : {item.price}</p>
+                          <img src={item.image_url} width={250} height={250} alt="new"/>
+                        </div>
+                    </div>
+                  }
                 </div>
-              </div>
               ))}
             </div>
           </main>
